@@ -45,5 +45,8 @@ public class 기능개발 {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(solution(new int[]{93, 30, 55}, new int[]{1, 30, 5}))); //{2,1}
         System.out.println(Arrays.toString(solution(new int[]{95, 90, 99, 99, 80, 99}, new int[]{1, 1, 1, 1, 1, 1}))); //{1,3,2}
+        System.out.println(Arrays.toString(solution(
+                new int[]{99, 1, 99, 1}, new int[]{1, 1, 1, 1}
+        ))); //{1,3}
     }
 }

@@ -2,52 +2,51 @@ package programmers.level3;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class 다단계_칫솔_판매 {
     public static int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
         int[] answer = new int[enroll.length];
+        HashMap<String, Person> people = new HashMap<>();
 
-        //판매원-추천인 맵
-        Map<String, String> dadanMap = new HashMap<>();
+        people.put("-", new Person("-"));
         for (int i = 0; i < enroll.length; i++) {
-            dadanMap.put(enroll[i], referral[i]); //key-판매원, value-추천인
+            people.put(enroll[i], new Person(enroll[i]));
         }
 
-        //판매원-판매금액 맵
-        Map<String, Integer> selMap = new HashMap<>();
-        for (int i = 0; i < seller.length; i++) {
-            selMap.put(seller[i], amount[i] * 100);
-        }
-
-        //조직원-수익금액 맵
-        Map<String, Integer> amtMap = new HashMap<>();
-        for (int i = 0; i < enroll.length; i++) {
-            amtMap.put(enroll[i], 0);
+        for (int i = 0; i < referral.length; i++) {
+            people.get(enroll[i]).parent = people.get(referral[i]);
         }
 
         for (int i = 0; i < seller.length; i++) {
-            String sellerName = seller[i]; //판매원
-            String referName = dadanMap.get(sellerName); //추천인
-
-            int amtCurAmt = amtMap.get(sellerName);
-            int amt = selMap.get(sellerName); //판매인의 판매금액
-            amtMap.put(sellerName, amtCurAmt + (int)Math.round((amt * 0.9))); //판매인은 판매금액의 90%
-            int referAmt = (int)(amt * 0.1); //추천인은 판매금액의 10%
-            while (!"-".equals(referName)) {
-                int referCurAmt = amtMap.get(referName); //추천인의 현재 수익금액
-                amtMap.put(referName, referCurAmt + (int)Math.round(referAmt * 0.9)); //추천인 수익금액 더해줌
-
-                referAmt = (int)Math.round(referAmt * 0.1); //다음 추천인이 있을 경우 추천인 수익에서 분배 (10%)
-                referName = dadanMap.get(referName); //다음 추천인 이름
-            }
+            addProfit(people.get(seller[i]), amount[i] * 100);
         }
 
-        for (int i=0; i< enroll.length; i++) {
-            answer[i] = amtMap.get(enroll[i]);
+        for (int i = 0; i < enroll.length; i++) {
+            answer[i] = people.get(enroll[i]).profit;
         }
 
         return answer;
+    }
+
+    public static void addProfit(Person person, int profit) {
+        int profit_for_parent = profit / 10;
+        if (profit_for_parent != 0 && person.parent != null) {
+            person.profit += profit - profit_for_parent;
+            addProfit(person.parent, profit_for_parent);
+        } else {
+            person.profit += profit;
+        }
+    }
+
+    static class Person {
+        String name;
+        Person parent;
+        int profit;
+        public Person(String name) {
+            this.name = name;
+            this.parent = null;
+            this.profit = 0;
+        }
     }
 
     public static void main(String[] args) {
