@@ -9,14 +9,10 @@ public class Main_1157 {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int[] arr = new int[26];
-        String s = br.readLine();
+        String s = br.readLine().toUpperCase();
 
         for (int i = 0; i < s.length(); i++) {
-            if ('a' <= s.charAt(i) && s.charAt(i) <= 'z') {
-                arr[s.charAt(i) - 97]++;
-            } else {
-                arr[s.charAt(i) - 65]++;
-            }
+            arr[s.charAt(i) - 65]++;
         }
 
         int max = -1;
