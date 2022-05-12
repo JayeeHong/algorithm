@@ -26,7 +26,6 @@ public class Main_1316 {
                         }
                     } else {
                         stringList.add(str.charAt(j));
-                        flag = true;
                     }
                 }
 
